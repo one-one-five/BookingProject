@@ -9,33 +9,27 @@ from .schema.booking_json_schema import BOOKING_SCHEMA
 @allure.feature('Создание заказа')
 @allure.step('Создание заказа')
 def test_create_booking(api_client, generate_random_booking_data):
-    url = api_client.get_base_url(Environment.PROD)
-    data = generate_random_booking_data
-    with allure.step('отправляем запрос'):
-        response = api_client.session.post(f'{url}/{Endpoints.BOOKING_ENDPOINT.value}', json=data)
-        response_json = response.json()
-    with allure.step('проверяем статус код'):
-        assert response.status_code == 200, f"статус код не совпадает, ожидали 200, пришел {response.status_code}"
+    with allure.step('создадим данные для бронирования'):
+        body = generate_random_booking_data
+    with allure.step('отправим запрос на бронирование'):
+        response = api_client.create_booking(body)
     with allure.step('проверим что id есть в ответе и оно целое число'):
-        assert isinstance(response_json.get('bookingid'), int), \
-            f"bookingid не число или отсутствует, пришло: {response_json.get('bookingid')}"
+        assert isinstance(response.get('bookingid'), int), \
+            f"bookingid не число или отсутствует, пришло: {response.get('bookingid')}"
 
 
 @allure.feature('Создание заказа')
 @allure.step('Проверка тела ответа')
 def test_response_body(api_client, generate_random_booking_data):
-    url = api_client.get_base_url(Environment.PROD)
-    data = generate_random_booking_data
-    with allure.step('отправляем запрос'):
-        response = api_client.session.post(f'{url}/{Endpoints.BOOKING_ENDPOINT.value}', json=data)
-        response_json = response.json()
-    with allure.step('проверяем статус код'):
-        assert response.status_code == 200, f"статус код не совпадает, ожидали 200, пришел {response.status_code}"
+    with allure.step('создадим данные для бронирования'):
+        body = generate_random_booking_data
+    with allure.step('отправим запрос на бронирование'):
+        response_json = api_client.create_booking(body)
     with allure.step('Валидация JSON'):
         validate(response_json, BOOKING_SCHEMA)
     with allure.step('Проверка, что ответ содержит переданные данные'):
-        for key in data.keys():
-            assert response_json['booking'].get(key) == data[key], \
+        for key in body.keys():
+            assert response_json['booking'].get(key) == body[key], \
                 f'Переданное значение {key} не совпадает с ответом {response_json["booking"].get(key)}'
 
 
