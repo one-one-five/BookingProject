@@ -107,4 +107,3 @@ def test_create_booking_depositpaid(api_client, generate_random_booking_data, up
     with allure.step('проверяем статус код'):
         assert response.status_code == expected_status_code, \
             f"статус код не совпадает, ожидали {expected_status_code}, пришел {response.status_code}"
-
