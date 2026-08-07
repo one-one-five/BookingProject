@@ -7,20 +7,8 @@ from .schema.booking_json_schema import BOOKING_SCHEMA
 
 
 @allure.feature('Создание заказа')
-@allure.step('Создание заказа')
-def test_create_booking(api_client, generate_random_booking_data):
-    with allure.step('создадим данные для бронирования'):
-        body = generate_random_booking_data
-    with allure.step('отправим запрос на бронирование'):
-        response = api_client.create_booking(body)
-    with allure.step('проверим что id есть в ответе и оно целое число'):
-        assert isinstance(response.get('bookingid'), int), \
-            f"bookingid не число или отсутствует, пришло: {response.get('bookingid')}"
-
-
-@allure.feature('Создание заказа')
-@allure.step('Проверка тела ответа')
-def test_response_body(api_client, generate_random_booking_data):
+@allure.step('Создание заказа и проверка тела ответа')
+def test_create_and_check_response_body(api_client, generate_random_booking_data):
     with allure.step('создадим данные для бронирования'):
         body = generate_random_booking_data
     with allure.step('отправим запрос на бронирование'):
@@ -90,7 +78,7 @@ def test_create_booking_without_booking_date(api_client, generate_random_booking
 
 
 @allure.feature('Создание заказа')
-@allure.step('Создание заказа c/без депозитом')
+@allure.step('Создание заказа c/без депозита(ом)')
 @pytest.mark.parametrize(
     'update_value, expected_status_code',
     [
