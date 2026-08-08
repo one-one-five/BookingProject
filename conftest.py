@@ -44,9 +44,3 @@ def generate_random_booking_data(booking_dates):
 
     }
     return data
-
-
-@pytest.fixture()
-def booking_url(api_client):
-    url = api_client.get_base_url(Environment.PROD)
-    return f'{url}/{Endpoints.BOOKING_ENDPOINT.value}'
